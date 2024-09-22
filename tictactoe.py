@@ -3,6 +3,7 @@ Tic Tac Toe Player
 """
 
 import math
+import copy
 
 X = "X"
 O = "O"
@@ -46,7 +47,7 @@ def result(board, action):
     """
     player_to_move = player(board)
 
-    new_board = board.copy()
+    new_board = copy.deepcopy(board)
     if new_board[action[0]][action[1]] == EMPTY:
         new_board[action[0]][action[1]] = player_to_move
     else:
@@ -59,14 +60,31 @@ def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
-    raise NotImplementedError
+    # Horizontal winner
+    horizontal_winner = [row for row in board if row == [X,X,X] or row == [O,O,O]]
 
+    if len(horizontal_winner) > 0:
+        return horizontal_winner[0][0]
+
+    # Vertical winner
+    for col_line in range(3):
+        if board[0][col_line] == board[1][col_line] == board[2][col_line] and board[0][col_line] != EMPTY:
+            return board[0][col_line]
+
+    # Diagonal winner 
+    if board[0][0] == board[1][1] == board[2][2] != EMPTY:
+        return board[0][0]
+
+    if board[0][2] == board[1][1] == board[2][0] != EMPTY:
+        return board[0][2]
 
 def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    raise NotImplementedError
+    row_full = [row for row in board if row.count(EMPTY) == 0]
+
+    return len(row_full) == 3
 
 
 def utility(board):
